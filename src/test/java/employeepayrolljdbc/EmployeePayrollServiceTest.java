@@ -1,10 +1,13 @@
 package employeepayrolljdbc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Test;
 
@@ -12,6 +15,7 @@ import employeepayrolljdbc.EmployeePayrollService.IOService;
 
 public class EmployeePayrollServiceTest 
 {
+	//uc2
 	@Test
 	public void givenEmployeePayrollInDB_WhenRetrieved_ShouldMatchEployeeCount() throws SQLException
 	{
@@ -20,6 +24,7 @@ public class EmployeePayrollServiceTest
 		assertEquals(3, employeePayrollData.size());
 	}
 	
+	//uc3 uc4
 	@Test
 	public void givenNewSalaryForEmployee_WhenUpdated_ShouldSyncWithDb() throws SQLException
 	{
@@ -30,6 +35,7 @@ public class EmployeePayrollServiceTest
 		assertEquals(3, employeePayrollData.size());
 	}
 	
+	//uc5
 	@Test
 	public void givenDataRange_WhenRetrieved_ShouldMatchEmployeeCount() throws SQLException
 	{
@@ -40,4 +46,50 @@ public class EmployeePayrollServiceTest
 		List<EmployeePayrollData> employeePayrollData = employeePayrollService.readEmployeePayrollData(IOService.DB_IO, startDate, endDate);
 		assertEquals(3, employeePayrollData.size());
 	}
+	
+	//uc6
+	@Test
+	public void givenPayrollData_WhenAverageSalaryRetrievedByGender_ShouldReturnProperValue() throws SQLException
+ 	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		Map<String, Double> averageSalaryByGender = employeePayrollService.readAverageSalaryByGender(IOService.DB_IO);
+		assertTrue(averageSalaryByGender.get("F").equals(55000.00) && averageSalaryByGender.get("M").equals(60000.00));
+ 	}
+	
+	@Test
+	public void givenPayrollData_WhenTotalSalarySumRetrievedByGender_ShouldReturnProperValue() throws SQLException
+ 	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		Map<String, Double> totalSalarySumByGender = employeePayrollService.readTotalSalarySumByGender(IOService.DB_IO);
+		assertTrue(totalSalarySumByGender.get("F").equals(110000.00) && totalSalarySumByGender.get("M").equals(60000.00));
+ 	}
+	
+	@Test
+	public void givenPayrollData_WhenMinimumSalaryRetrievedByGender_ShouldReturnProperValue() throws SQLException
+ 	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		Map<String, Double> minSalaryByGender = employeePayrollService.readMinSalaryByGender(IOService.DB_IO);
+		assertTrue(minSalaryByGender.get("F").equals(40000.00) && minSalaryByGender.get("M").equals(60000.00));
+ 	}
+	
+	@Test
+	public void givenPayrollData_WhenMaximumSalaryRetrievedByGender_ShouldReturnProperValue() throws SQLException
+ 	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		Map<String, Double> maxSalaryByGender = employeePayrollService.readMaxSalaryByGender(IOService.DB_IO);
+		assertTrue(maxSalaryByGender.get("F").equals(70000.00) && maxSalaryByGender.get("M").equals(60000.00));
+ 	}
+	
+	@Test
+	public void givenPayrollData_WhenCountOfEmployeesRetrievedByGender_ShouldReturnProperValue() throws SQLException
+ 	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		Map<String, Double> employeeCountByGender = employeePayrollService.readEmployeeCountByGender(IOService.DB_IO);
+		assertTrue(employeeCountByGender.get("F").equals(2.00) && employeeCountByGender.get("M").equals(1.00));
+ 	}
 }

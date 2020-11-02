@@ -9,7 +9,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class EmployeePayrollDBService 
 {
@@ -29,6 +32,7 @@ public class EmployeePayrollDBService
 		return employeePayrollDBService;
 	}
 	
+	//uc1
 	private Connection getConnection() 
 	{
 		String jdbcURL = "jdbc:mysql://localhost:3306/payroll_service?useSSL=false";
@@ -50,6 +54,7 @@ public class EmployeePayrollDBService
 		return connection;
 	}
 	
+	//uc2
 	public List<EmployeePayrollData> readData()
 	{
 		String sql = "select *  from employee_payroll;";
@@ -57,6 +62,7 @@ public class EmployeePayrollDBService
 		return this.getEmployeePayrollDataUsingDB(sql);
 	}
 
+	//uc3 uc4
 	public int updateEmployeeData(String name, double salary) 
 	{
 		String sql = String.format("update employee_payroll set salary = %.2f where name = '%s';", salary, name);
@@ -134,7 +140,8 @@ public class EmployeePayrollDBService
 		}
 		
 	}
-
+	
+	//uc5
 	public List<EmployeePayrollData> getEmployeePayrollForDateRange(LocalDate startDate, LocalDate endDate) 
 	{
 		String sql = String.format("Select * from employee_payroll where start between '%s' and '%s';", 
@@ -143,6 +150,47 @@ public class EmployeePayrollDBService
 		return this.getEmployeePayrollDataUsingDB(sql);
 	}
 
+	//uc6
+	public Map<String, Double> getAverageSalaryByGender() 
+	{
+		String sql = String.format("Select gender, avg(salary) as avg_salary from employee_payroll group by gender");
+		String column_name = "avg_salary";
+		
+		return this.getSalaryDetailsByGender(sql, column_name);
+	}
+	
+	public Map<String, Double> getTotalSalarySumByGender() 
+	{
+		String sql = "select gender, sum(salary) as sum from employee_payroll group by gender;"; 
+		String column_name = "sum";
+		
+		return this.getSalaryDetailsByGender(sql, column_name);
+	}
+	
+	public Map<String, Double> getMinSalaryByGender() 
+	{
+		String sql = "select gender, min(salary) as min_salary from employee_payroll group by gender;"; 
+		String column_name = "min_salary";
+		
+		return this.getSalaryDetailsByGender(sql, column_name);
+	}
+
+	public Map<String, Double> getMaxSalaryByGender() 
+	{
+		String sql = "select gender, max(salary) as max_salary from employee_payroll group by gender;"; 
+		String column_name = "max_salary";
+		
+		return this.getSalaryDetailsByGender(sql, column_name);
+	}
+	
+	public Map<String, Double> getEmployeeCountByGender() 
+	{
+		String sql = "select gender, count(*) as count_employee from employee_payroll group by gender;"; 
+		String column_name = "count_employee";
+		
+		return this.getSalaryDetailsByGender(sql, column_name);
+	}
+	
 	private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) 
 	{
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
@@ -158,5 +206,29 @@ public class EmployeePayrollDBService
 		}
 		
 		return employeePayrollList;
+	}
+	
+	private Map<String, Double> getSalaryDetailsByGender(String sql, String column_name) 
+	{
+		Map<String, Double> genderToColumnMap = new HashMap<String, Double>();
+		
+		try(Connection connection = this.getConnection()) 
+		{
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			
+			while(resultSet.next())
+			{
+				String gender = resultSet.getString("gender");
+				double salary = resultSet.getDouble(column_name);
+				genderToColumnMap.put(gender, salary);
+			}
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return genderToColumnMap;
 	}
 }
