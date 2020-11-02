@@ -1,6 +1,7 @@
 package employeepayrolljdbc;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeePayrollService 
@@ -61,5 +62,14 @@ public class EmployeePayrollService
 								.findFirst()
 								.orElse(null);
 		return employeePayrollData;
+	}
+
+	public List<EmployeePayrollData> readEmployeePayrollData(IOService ioService, LocalDate startDate, LocalDate endDate) 
+	{
+		if(ioService.equals(IOService.DB_IO))
+		{
+			return employeePayrollDBService.getEmployeePayrollForDateRange(startDate, endDate);
+		}
+		return null;
 	}
 }
