@@ -54,19 +54,7 @@ public class EmployeePayrollDBService
 	{
 		String sql = "select *  from employee_payroll;";
 		
-		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
-		try(Connection connection = this.getConnection()) 
-		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
-			employeePayrollList  = this.getEmployeePayrollData(resultSet);
-		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return employeePayrollList;
+		return this.getEmployeePayrollDataUsingDB(sql);
 	}
 
 	public int updateEmployeeData(String name, double salary) 
@@ -152,6 +140,11 @@ public class EmployeePayrollDBService
 		String sql = String.format("Select * from employee_payroll where start between '%s' and '%s';", 
 									Date.valueOf(startDate), Date.valueOf(endDate));
 		
+		return this.getEmployeePayrollDataUsingDB(sql);
+	}
+
+	private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) 
+	{
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
 		try(Connection connection = this.getConnection()) 
 		{
