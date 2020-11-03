@@ -55,6 +55,7 @@ public class EmployeePayrollService
 	public boolean checkEmployeePayrollInSyncWithDB(String name) 
 	{
 		List<EmployeePayrollData> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
+		System.out.println(employeePayrollDataList.get(0).equals(getEmployeePayrollData(name)));
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
@@ -121,5 +122,11 @@ public class EmployeePayrollService
 			return employeePayrollDBService.getEmployeeCountByGender();
 		}
 		return null;
+	}
+
+	//uc7
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate start) 
+	{
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, start));
 	}
 }
