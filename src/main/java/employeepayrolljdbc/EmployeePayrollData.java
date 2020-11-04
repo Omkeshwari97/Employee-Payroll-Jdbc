@@ -1,6 +1,7 @@
 package employeepayrolljdbc;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class EmployeePayrollData 
 {
@@ -9,6 +10,7 @@ public class EmployeePayrollData
 	public double salary;
 	public LocalDate startDate;
 	private String gender;
+	private List<String> department;
 	
 	public EmployeePayrollData(Integer id, String name, Double salary)
 	{
@@ -27,6 +29,12 @@ public class EmployeePayrollData
 	{
 		this(id, name, salary, start);
 		this.gender = gender;
+	}
+
+	public EmployeePayrollData(int id, String name, String gender, double salary, LocalDate start, List<String> department) 
+	{
+		this(id, name, gender, salary, start);
+		this.department = department;
 	}
 
 	@Override

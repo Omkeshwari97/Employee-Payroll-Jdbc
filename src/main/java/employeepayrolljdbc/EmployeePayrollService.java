@@ -124,9 +124,9 @@ public class EmployeePayrollService
 		return null;
 	}
 
-	//uc7 //uc8
-	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate start) 
+	//uc7 //uc8 //uc9
+	public void addEmployeeToPayroll(String name, String gender, double salary, LocalDate start, List<String> department) 
 	{
-		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, start));
+		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, start, department));
 	}
 }

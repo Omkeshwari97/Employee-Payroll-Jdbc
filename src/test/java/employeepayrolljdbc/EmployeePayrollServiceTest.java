@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -93,13 +94,13 @@ public class EmployeePayrollServiceTest
 		assertTrue(employeeCountByGender.get("F").equals(2.00) && employeeCountByGender.get("M").equals(1.00));
  	}
 	
-	//uc7 //uc8
+	//uc7 //uc8 //uc9
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws SQLException
  	{
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
 		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
-		employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00, LocalDate.now());
+		employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00, LocalDate.now(), Arrays.asList("Sales", "Marketing"));
 		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
 		assertTrue(result);
  	}
