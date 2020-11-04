@@ -196,7 +196,17 @@ public class EmployeePayrollDBService
 	{	
 		int employeeId = -1;
 		EmployeePayrollData employeePayrollData =null;
-		Connection connection = this.getConnection();
+		Connection connection = null;
+		
+		try 
+		{
+			connection = this.getConnection();
+			connection.setAutoCommit(false);
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
 		
 		try(Statement statement = connection.createStatement())
 		{		
@@ -213,11 +223,18 @@ public class EmployeePayrollDBService
 					employeeId = resultSet.getInt(1);
 				}
 			}
-			
-		} 
+		}  
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
+			try 
+			{
+				connection.rollback();
+			}
+			catch (SQLException e1) 
+			{
+				e1.printStackTrace();
+			}
 		}
 		
 		try(Statement statement = connection.createStatement())
@@ -239,8 +256,38 @@ public class EmployeePayrollDBService
 		catch (SQLException e) 
 		{
 			e.printStackTrace();
+			try 
+			{
+				connection.rollback();
+			}
+			catch (SQLException e1) 
+			{
+				e1.printStackTrace();
+			}
 		}
 		
+		try 
+		{
+			connection.commit();
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		finally 
+		{
+			if(connection != null)
+			{
+				try 
+				{
+					connection.close();
+				} 
+				catch (Exception e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		}
 		return employeePayrollData;
 	}
 	
