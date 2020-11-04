@@ -129,4 +129,11 @@ public class EmployeePayrollService
 	{
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, start, department));
 	}
+
+	//uc8
+	public List<EmployeePayrollData> deleteEmployee(String name) throws SQLException 
+	{
+		employeePayrollDBService.deleteEmployee(name);
+		return readEmployeePayrollData(IOService.DB_IO);
+	}
 }

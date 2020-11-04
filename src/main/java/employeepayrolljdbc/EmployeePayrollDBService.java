@@ -309,6 +309,22 @@ public class EmployeePayrollDBService
 		return employeePayrollData;
 	}
 	
+	//uc8
+	public void deleteEmployee(String name) 
+	{
+		String sql = String.format("Delete from employee_payroll where name = '%s'", name);
+			
+		try(Connection connection = this.getConnection()) 
+		{
+			Statement statement = connection.createStatement();
+			statement.executeUpdate(sql);
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) 
 	{
 		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();

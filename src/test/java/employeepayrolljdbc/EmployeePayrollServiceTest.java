@@ -94,9 +94,30 @@ public class EmployeePayrollServiceTest
 		assertTrue(employeeCountByGender.get("F").equals(2.00) && employeeCountByGender.get("M").equals(1.00));
  	}
 	
-	//uc7 //uc8 //uc9
+	//uc7 //uc8 
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws SQLException
+ 	{
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
+		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00, LocalDate.now(), Arrays.asList("Sales"));
+		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
+		assertTrue(result);
+ 	}
+	
+	//uc8
+	@Test
+	public void givenEmployeeDB_WhenAnEmployeeIsDeleted_ShouldSyncWithDB() throws SQLException 
+	{
+		EmployeePayrollService employeeService = new EmployeePayrollService();
+		employeeService.readEmployeePayrollData(IOService.DB_IO);
+		List<EmployeePayrollData> employeePayrollData = employeeService.deleteEmployee("Mital");
+		assertEquals(2,employeePayrollData.size());
+	}
+	
+	//uc9
+	@Test
+	public void givenNewEmployeeWithDepartment_WhenAdded_ShouldSyncWithDB() throws SQLException
  	{
 		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
 		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
