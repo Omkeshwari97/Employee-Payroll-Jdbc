@@ -93,7 +93,7 @@ public class EmployeePayrollServiceTest
 		assertTrue(employeeCountByGender.get("F").equals(2.00) && employeeCountByGender.get("M").equals(1.00));
  	}
 	
-	//uc7
+	//uc7 //uc8
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws SQLException
  	{

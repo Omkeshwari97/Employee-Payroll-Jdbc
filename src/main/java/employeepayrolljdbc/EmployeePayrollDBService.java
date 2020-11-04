@@ -191,18 +191,18 @@ public class EmployeePayrollDBService
 		return this.getSalaryDetailsByGender(sql, column_name);
 	}
 
-	//uc7
+	//uc7 //uc8
 	public EmployeePayrollData addEmployeeToPayroll(String name, String gender, double salary, LocalDate start) 
 	{	
 		int employeeId = -1;
 		EmployeePayrollData employeePayrollData =null;
+		Connection connection = this.getConnection();
 		
-		String sql = String.format("Insert into employee_payroll (name, gender, salary, start) values ('%s', '%s', '%s', '%s')", 
-									name, gender, salary, Date.valueOf(start));
-		
-		try(Connection connection = this.getConnection())
-		{
-			Statement statement = connection.createStatement();
+		try(Statement statement = connection.createStatement())
+		{		
+			String sql = String.format("Insert into employee_payroll (name, gender, salary, start) values ('%s', '%s', '%s', '%s')", 
+					name, gender, salary, Date.valueOf(start));
+			
 			int rowAffected = statement.executeUpdate(sql, statement.RETURN_GENERATED_KEYS);
 			if(rowAffected == 1)
 			{
@@ -214,7 +214,27 @@ public class EmployeePayrollDBService
 				}
 			}
 			
-			employeePayrollData = new EmployeePayrollData(employeeId, name, gender, salary, start);
+		} 
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		try(Statement statement = connection.createStatement())
+		{		
+			double deductions = salary * 0.2;
+			double taxable_pay = salary - deductions;
+			double tax = taxable_pay * 0.1;
+			double net_pay = salary - tax;
+			
+			String sql1 = String.format("Insert into payroll_details (employee_id, basic_pay, deductions, taxable_pay, income_tax, net_pay) values ('%s', '%s', '%s', '%s', '%s', '%s')", 
+					employeeId, salary, deductions, taxable_pay, tax, net_pay);
+			
+			int rowAffected = statement.executeUpdate(sql1);
+			if(rowAffected == 1)
+			{
+				employeePayrollData = new EmployeePayrollData(employeeId, name, gender, salary, start);
+			}
 		} 
 		catch (SQLException e) 
 		{
