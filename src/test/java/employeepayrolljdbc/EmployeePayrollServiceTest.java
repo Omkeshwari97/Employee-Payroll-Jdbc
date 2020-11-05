@@ -134,7 +134,7 @@ public class EmployeePayrollServiceTest
 	*/
 	
 	//Thread
-	//uc1 //uc2
+	//uct1 //uct2 //uct3
 	  @Test public void givenNewEmployee_WhenAdded_ShouldMatchEmployeeEntries() throws SQLException 
 	  { 
 		  EmployeePayrollData arrayOfEmps[] = { 

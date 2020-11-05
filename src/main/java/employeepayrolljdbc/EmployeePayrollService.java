@@ -140,7 +140,7 @@ public class EmployeePayrollService
 	}
 
 	//Thread
-	//uc1
+	//uct1
 	public void addEmployeesToPayroll(List<EmployeePayrollData> employeePayrollDataList) 
 	{
 		employeePayrollDataList.forEach(employeePayrollData -> {
@@ -161,7 +161,7 @@ public class EmployeePayrollService
 		return 0;
 	}
 
-	//uc2
+	//uct2
 	public void addEmployeesToPayrollWithThreads(List<EmployeePayrollData> employeePayrollDataList) 
 	{
 		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
