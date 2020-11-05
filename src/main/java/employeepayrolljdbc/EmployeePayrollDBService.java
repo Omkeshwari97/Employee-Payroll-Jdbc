@@ -316,8 +316,10 @@ public class EmployeePayrollDBService
 			
 		try(Connection connection = this.getConnection()) 
 		{
+			connection.setAutoCommit(false);
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(sql);
+			connection.commit();
 		} 
 		catch (SQLException e) 
 		{

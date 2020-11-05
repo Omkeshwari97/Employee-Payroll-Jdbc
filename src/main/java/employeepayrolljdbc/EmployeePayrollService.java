@@ -2,6 +2,7 @@ package employeepayrolljdbc;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -135,5 +136,23 @@ public class EmployeePayrollService
 	{
 		employeePayrollDBService.deleteEmployee(name);
 		return readEmployeePayrollData(IOService.DB_IO);
+	}
+
+	//Thread
+	//uc1
+	public void addEmployeesToPayroll(List<EmployeePayrollData> employeePayrollDataList) 
+	{
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			System.out.println("Employee Being Added: " + employeePayrollData.name);
+			this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.gender,
+			employeePayrollData.salary, employeePayrollData.startDate, Arrays.asList("Administration"));
+			System.out.println("Employee Added: " + employeePayrollData.name);
+		});
+		System.out.println(this.employeePayrollList);
+	}
+
+	public long countEntries(IOService ioService) 
+	{
+		return employeePayrollList.size();
 	}
 }

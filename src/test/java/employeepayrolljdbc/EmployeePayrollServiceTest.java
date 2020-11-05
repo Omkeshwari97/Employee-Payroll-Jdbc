@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +18,7 @@ import employeepayrolljdbc.EmployeePayrollService.IOService;
 
 public class EmployeePayrollServiceTest 
 {
+	/*
 	//uc2
 	@Test
 	public void givenEmployeePayrollInDB_WhenRetrieved_ShouldMatchEployeeCount() throws SQLException
@@ -95,36 +98,60 @@ public class EmployeePayrollServiceTest
  	}
 	
 	//uc7 //uc8 
-	/*
-	 * @Test public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws
-	 * SQLException { EmployeePayrollService employeePayrollService = new
-	 * EmployeePayrollService();
-	 * employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
-	 * employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00,
-	 * LocalDate.now(), Arrays.asList("Sales")); boolean result =
-	 * employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
-	 * assertTrue(result); }
-	 */
+	  @Test 
+	  public void givenNewEmployee_WhenAdded_ShouldSyncWithDB() throws SQLException
+	  { 
+		  EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		  employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		  employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00, LocalDate.now(), Arrays.asList("Sales")); 
+		  boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
+		  assertTrue(result); 
+	  }
+	 
 	
 	//uc8
-	/*
-	 * @Test public void givenEmployeeDB_WhenAnEmployeeIsDeleted_ShouldSyncWithDB()
-	 * throws SQLException { EmployeePayrollService employeeService = new
-	 * EmployeePayrollService();
-	 * employeeService.readEmployeePayrollData(IOService.DB_IO);
-	 * List<EmployeePayrollData> employeePayrollData =
-	 * employeeService.deleteEmployee("Mital");
-	 * assertEquals(2,employeePayrollData.size()); }
-	 */
-	
+	  @Test 
+	  public void givenEmployeeDB_WhenAnEmployeeIsDeleted_ShouldSyncWithDB() throws SQLException 
+	  { 
+		EmployeePayrollService employeeService = new EmployeePayrollService();
+		employeeService.readEmployeePayrollData(IOService.DB_IO);
+		List<EmployeePayrollData> employeePayrollData =	employeeService.deleteEmployee("Mital");
+	  	assertEquals(2,employeePayrollData.size()); 
+	  }
+	 	
+
 	//uc9
-	@Test
-	public void givenNewEmployeeWithDepartment_WhenAdded_ShouldSyncWithDB() throws SQLException
- 	{
-		EmployeePayrollService employeePayrollService = new EmployeePayrollService(); 
-		employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
-		employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00, LocalDate.now(), Arrays.asList("Sales", "Marketing"));
-		boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
-		assertTrue(result);
- 	}
+	  @Test 
+	  public void givenNewEmployeeWithDepartment_WhenAdded_ShouldSyncWithDB() throws SQLException 
+	  { 
+		  EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		  employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		  employeePayrollService.addEmployeeToPayroll("Mital", "M", 60000.00, LocalDate.now(), Arrays.asList("Sales", "Marketing")); 
+		  boolean result =
+		  employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
+		  assertTrue(result); 
+	  }
+	*/
+	
+	//Thread
+	//uc1
+	
+	  @Test public void givenNewEmployee_WhenAdded_ShouldMatchEmployeeEntries() throws SQLException 
+	  { 
+		  EmployeePayrollData arrayOfEmps[] = { 
+		  new EmployeePayrollData(1, "Jeff Bezos", "M", 10000.0, LocalDate.now()), 
+		  new EmployeePayrollData(2, "Bill Gates", "M", 20000.0, LocalDate.now()), 
+		  new EmployeePayrollData(3, "Mark Zuckerberg", "M", 30000.0, LocalDate.now()), 
+		  new EmployeePayrollData(4, "Sunder", "M", 60000.0, LocalDate.now()), 
+		  new EmployeePayrollData(5, "Mukesh", "M", 10000.0, LocalDate.now()), 
+		  new EmployeePayrollData(6, "Anil", "M", 20000.0, LocalDate.now()) };
+		  EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		  employeePayrollService.readEmployeePayrollData(IOService.DB_IO); 
+		  Instant start = Instant.now();
+		  employeePayrollService.addEmployeesToPayroll(Arrays.asList(arrayOfEmps));
+		  Instant end = Instant.now(); 
+		  System.out.println("Duration without Thread: " + Duration.between(start, end)); 
+		  assertEquals(9, employeePayrollService.countEntries(IOService.DB_IO)); 
+	 }
+		 
 }

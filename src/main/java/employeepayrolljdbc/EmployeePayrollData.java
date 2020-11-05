@@ -9,8 +9,8 @@ public class EmployeePayrollData
 	public String name;
 	public double salary;
 	public LocalDate startDate;
-	private String gender;
-	private List<String> department;
+	public String gender;
+	public List<String> department;
 	
 	public EmployeePayrollData(Integer id, String name, Double salary)
 	{
