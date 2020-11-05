@@ -65,7 +65,6 @@ public class EmployeePayRollFileService
 		}
 	}
 	
-	//uct2
 	public long countEntries()
 	{
 		long entries = 0;
