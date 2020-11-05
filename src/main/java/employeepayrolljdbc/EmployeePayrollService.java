@@ -2,6 +2,7 @@ package employeepayrolljdbc;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -172,12 +173,12 @@ public class EmployeePayrollService
 		
 		employeePayrollDataList.forEach(employeePayrollData -> {
 			Runnable task = () -> {
-				System.out.println("Employee Being Added: " + Thread.currentThread().getName());
+				log.info("Employee Being Added: " + Thread.currentThread().getName());
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
 				this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.gender,
 				employeePayrollData.salary, employeePayrollData.startDate, Arrays.asList("Administration"));
 				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
-				System.out.println("Employee Added: " + Thread.currentThread().getName());
+				log.info("Employee Added: " + Thread.currentThread().getName());
 				};
 		
 				Thread thread = new Thread(task, employeePayrollData.name);
@@ -197,5 +198,53 @@ public class EmployeePayrollService
 		}
 		
 		System.out.println(this.employeePayrollList);
+	}
+
+	//uc5
+	public void updateEmployeePayrollSalary(Map<String, Double> salaryMap) 
+	{
+		Map<Integer, Boolean> employeeUpdationStatus = new HashMap<Integer, Boolean>();
+	
+		salaryMap.forEach((name, salary) -> { 
+		Runnable task = () -> {
+			log.info("Employee Being Updated: " + Thread.currentThread().getName());
+			employeeUpdationStatus.put(name.hashCode(), false);
+			this.updateEmployeePayrollSalary(name, salary);;
+			employeeUpdationStatus.put(name.hashCode(), true);
+			log.info("Employee Updated: " + Thread.currentThread().getName());
+		};
+		
+			Thread thread = new Thread(task, name);
+			thread.start();
+		});
+		
+		while(employeeUpdationStatus.containsValue(false))
+		{
+			try
+			{
+				Thread.sleep(10);
+			}
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public boolean checkEmployeePayrollInSyncWithDB(List<String> employeeList) 
+	{
+		List<Boolean> resultList = new ArrayList<>();
+		employeeList.forEach(name -> {
+			List<EmployeePayrollData> empList;
+			empList = employeePayrollDBService.getEmployeePayrollData(name);
+			resultList.add(empList.get(0).equals(getEmployeePayrollData(name)));
+		});
+		
+		if(resultList.contains(false))
+		{
+			return false;
+		}
+		
+		return true;
 	}
 }

@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -134,16 +135,18 @@ public class EmployeePayrollServiceTest
 	*/
 	
 	//Thread
-	//uct1 //uct2 //uct3
-	  @Test public void givenNewEmployee_WhenAdded_ShouldMatchEmployeeEntries() throws SQLException 
+	//uct1 //uct2 //uct3 //uct4
+	  @Test 
+	  public void givenNewEmployee_WhenAdded_ShouldMatchEmployeeEntries() throws SQLException 
 	  { 
 		  EmployeePayrollData arrayOfEmps[] = { 
-		  new EmployeePayrollData(1, "Jeff Bezos", "M", 10000.0, LocalDate.now()), 
-		  new EmployeePayrollData(2, "Bill Gates", "M", 20000.0, LocalDate.now()), 
-		  new EmployeePayrollData(3, "Mark Zuckerberg", "M", 30000.0, LocalDate.now()), 
-		  new EmployeePayrollData(4, "Sunder", "M", 60000.0, LocalDate.now()), 
-		  new EmployeePayrollData(5, "Mukesh", "M", 10000.0, LocalDate.now()), 
-		  new EmployeePayrollData(6, "Anil", "M", 20000.0, LocalDate.now()) };
+				  new EmployeePayrollData(1, "Jeff Bezos", "M", 10000.0, LocalDate.now()), 
+				  new EmployeePayrollData(2, "Bill Gates", "M", 20000.0, LocalDate.now()), 
+				  new EmployeePayrollData(3, "Mark Zuckerberg", "M", 30000.0, LocalDate.now()), 
+				  new EmployeePayrollData(4, "Sunder", "M", 60000.0, LocalDate.now()), 
+				  new EmployeePayrollData(5, "Mukesh", "M", 10000.0, LocalDate.now()), 
+				  new EmployeePayrollData(6, "Anil", "M", 20000.0, LocalDate.now()) 
+				  };
 		  EmployeePayrollService employeePayrollService = new EmployeePayrollService();
 		  employeePayrollService.readEmployeePayrollData(IOService.DB_IO); 
 		  Instant start = Instant.now();
@@ -157,4 +160,21 @@ public class EmployeePayrollServiceTest
 		  assertEquals(15, employeePayrollService.countEntries(IOService.DB_IO)); 
 	 }
 		 
+	  //uct5
+	  @Test
+	  public void givenNewSalaryOfExistingEmployee_WhenUpdated_ShouldSynWithDB() throws SQLException
+	  {
+		  Map<String, Double> salaryMap = new HashMap<>();
+		  salaryMap.put("Sunder", 80000.0);
+		  salaryMap.put("Anil", 15000.0);
+		  EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		  employeePayrollService.readEmployeePayrollData(IOService.DB_IO);
+		  Instant start = Instant.now();
+		  employeePayrollService.updateEmployeePayrollSalary(salaryMap);
+		  Instant end = Instant.now();
+		  System.out.println("Duration with Thread: " + Duration.between(start, end));
+		  boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(Arrays.asList("Sunder, Anil"));
+		  assertTrue(result);
+	  }
+	  
 }
