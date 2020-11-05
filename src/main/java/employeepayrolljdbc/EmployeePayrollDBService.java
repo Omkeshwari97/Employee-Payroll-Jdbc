@@ -14,8 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class EmployeePayrollDBService 
 {
+	private static final Logger log = LogManager.getLogger(EmployeePayrollDBService.class);
 	private static EmployeePayrollDBService employeePayrollDBService;
 	private PreparedStatement employeePayrollDataStatement;
 	private int connectionCounter = 0;
@@ -45,10 +49,10 @@ public class EmployeePayrollDBService
 		
 		try 
 		{
-			System.out.println("Processing Thread: " + Thread.currentThread().getName() +
+			log.info("Processing Thread: " + Thread.currentThread().getName() +
 								" Connecting to database with Id: " + connectionCounter);
 			connection = DriverManager.getConnection(jdbcURL, userName, password);
-			System.out.println("Processing Thread: " + Thread.currentThread().getName() + 
+			log.info("Processing Thread: " + Thread.currentThread().getName() + 
 								" Id: " + connectionCounter + " Connection is successful!" + connection);					
 		}
 		catch (Exception e) 

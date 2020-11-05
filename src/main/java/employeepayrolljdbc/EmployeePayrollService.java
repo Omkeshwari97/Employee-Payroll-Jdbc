@@ -7,10 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class EmployeePayrollService 
 {
 	public enum IOService{FILE_IO, DB_IO}
-	
+	private static final Logger log = LogManager.getLogger(EmployeePayrollDBService.class);
 	private List<EmployeePayrollData> employeePayrollList;
 	private EmployeePayrollDBService employeePayrollDBService;
 	
@@ -144,10 +148,10 @@ public class EmployeePayrollService
 	public void addEmployeesToPayroll(List<EmployeePayrollData> employeePayrollDataList) 
 	{
 		employeePayrollDataList.forEach(employeePayrollData -> {
-			System.out.println("Employee Being Added: " + employeePayrollData.name);
+			log.info("Employee Being Added: " + employeePayrollData.name);
 			this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.gender,
 			employeePayrollData.salary, employeePayrollData.startDate, Arrays.asList("Administration"));
-			System.out.println("Employee Added: " + employeePayrollData.name);
+			log.info("Employee Added: " + employeePayrollData.name);
 		});
 		System.out.println(this.employeePayrollList);
 	}
