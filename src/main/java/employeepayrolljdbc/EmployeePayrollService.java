@@ -3,6 +3,7 @@ package employeepayrolljdbc;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -153,6 +154,44 @@ public class EmployeePayrollService
 
 	public long countEntries(IOService ioService) 
 	{
-		return employeePayrollList.size();
+		if(ioService.equals(ioService.DB_IO))
+		{
+			return employeePayrollList.size();
+		}
+		return 0;
+	}
+
+	//uc2
+	public void addEmployeesToPayrollWithThreads(List<EmployeePayrollData> employeePayrollDataList) 
+	{
+		Map<Integer, Boolean> employeeAdditionStatus = new HashMap<Integer, Boolean>();
+		
+		employeePayrollDataList.forEach(employeePayrollData -> {
+			Runnable task = () -> {
+				System.out.println("Employee Being Added: " + Thread.currentThread().getName());
+				employeeAdditionStatus.put(employeePayrollData.hashCode(), false);
+				this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.gender,
+				employeePayrollData.salary, employeePayrollData.startDate, Arrays.asList("Administration"));
+				employeeAdditionStatus.put(employeePayrollData.hashCode(), true);
+				System.out.println("Employee Added: " + Thread.currentThread().getName());
+				};
+		
+				Thread thread = new Thread(task, employeePayrollData.name);
+				thread.start();
+		});
+		
+		while(employeeAdditionStatus.containsValue(false))
+		{
+			try
+			{
+				Thread.sleep(10);
+			}
+			catch (InterruptedException e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		System.out.println(this.employeePayrollList);
 	}
 }

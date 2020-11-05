@@ -2,6 +2,7 @@ package employeepayrolljdbc;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class EmployeePayrollData 
 {
@@ -37,6 +38,12 @@ public class EmployeePayrollData
 		this.department = department;
 	}
 
+	@Override
+	public int hashCode() 
+	{
+		return Objects.hash(name, gender, salary, startDate);
+	}
+	
 	@Override
 	public String toString()
 	{
