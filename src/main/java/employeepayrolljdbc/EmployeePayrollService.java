@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 public class EmployeePayrollService 
 {
-	public enum IOService{FILE_IO, DB_IO}
+	public enum IOService{FILE_IO, DB_IO, Rest_IO}
 	private static final Logger log = LogManager.getLogger(EmployeePayrollDBService.class);
 	private List<EmployeePayrollData> employeePayrollList;
 	private EmployeePayrollDBService employeePayrollDBService;
@@ -27,7 +27,7 @@ public class EmployeePayrollService
 	public EmployeePayrollService(List<EmployeePayrollData> employeePayrollList) 
 	{
 		this();
-		this.employeePayrollList = employeePayrollList;
+		this.employeePayrollList = new ArrayList<>(employeePayrollList);
 	}
 	
 	//uc2
@@ -163,7 +163,7 @@ public class EmployeePayrollService
 		{
 			return employeePayrollList.size();
 		}
-		return 0;
+		return employeePayrollList.size();
 	}
 
 	//uct2

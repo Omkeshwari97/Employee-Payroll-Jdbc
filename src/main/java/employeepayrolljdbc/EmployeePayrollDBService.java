@@ -88,6 +88,23 @@ public class EmployeePayrollDBService
 		
 		return 0;
 	}
+	
+	private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) 
+	{
+		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
+		try(Connection connection = this.getConnection()) 
+		{
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			employeePayrollList  = this.getEmployeePayrollData(resultSet);
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		return employeePayrollList;
+	}
 
 	public List<EmployeePayrollData> getEmployeePayrollData(String name) 
 	{
@@ -334,23 +351,6 @@ public class EmployeePayrollDBService
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	private List<EmployeePayrollData> getEmployeePayrollDataUsingDB(String sql) 
-	{
-		List<EmployeePayrollData> employeePayrollList = new ArrayList<>();
-		try(Connection connection = this.getConnection()) 
-		{
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery(sql);
-			employeePayrollList  = this.getEmployeePayrollData(resultSet);
-		}
-		catch (SQLException e) 
-		{
-			e.printStackTrace();
-		}
-		
-		return employeePayrollList;
 	}
 	
 	private Map<String, Double> getSalaryDetailsByGender(String sql, String column_name) 

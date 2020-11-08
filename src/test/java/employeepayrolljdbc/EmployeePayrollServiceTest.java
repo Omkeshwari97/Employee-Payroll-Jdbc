@@ -13,9 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.junit.Before;
 import org.junit.Test;
 
+import com.google.gson.Gson;
+
 import employeepayrolljdbc.EmployeePayrollService.IOService;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 
 public class EmployeePayrollServiceTest 
 {
@@ -132,11 +137,10 @@ public class EmployeePayrollServiceTest
 		  employeePayrollService.checkEmployeePayrollInSyncWithDB("Mital");
 		  assertTrue(result); 
 	  }
-	*/
 	
 	//Thread
 	//uct1 //uct2 //uct3 //uct4
-	  @Test 
+	@Test 
 	  public void givenNewEmployee_WhenAdded_ShouldMatchEmployeeEntries() throws SQLException 
 	  { 
 		  EmployeePayrollData arrayOfEmps[] = { 
@@ -176,5 +180,31 @@ public class EmployeePayrollServiceTest
 		  boolean result = employeePayrollService.checkEmployeePayrollInSyncWithDB(Arrays.asList("Sunder, Anil"));
 		  assertTrue(result);
 	  }
-	  
-}
+	  */
+	
+	//restapi
+	@Before
+	public void setup()
+	{
+		RestAssured.baseURI = "http://localhost";
+		RestAssured.port = 3000;
+	}
+	
+	private EmployeePayrollData[] getEmployeeList() 
+	{
+		Response response = RestAssured.get("/employee_payroll");
+		System.out.println("EMPLOYEE PAYROLL ENTRIES IN JSONSERVER:\n" + response.asString());
+		EmployeePayrollData arrayOfEmps[] = new Gson().fromJson(response.asString(), EmployeePayrollData[].class);
+		return arrayOfEmps;
+	}
+	
+	@Test
+	public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount()
+	{
+		EmployeePayrollData arrayOfEmps[] = getEmployeeList();
+		EmployeePayrollService employeePayrollService;
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
+		assertEquals(2, entries);
+	}
+} 
