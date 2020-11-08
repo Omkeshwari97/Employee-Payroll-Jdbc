@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import employeepayrolljdbc.EmployeePayrollService.IOService;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 
 public class EmployeePayrollServiceTest 
 {
@@ -182,7 +183,8 @@ public class EmployeePayrollServiceTest
 	  }
 	  */
 	
-	//restapi
+	//restAPI JSON SERVER
+	
 	@Before
 	public void setup()
 	{
@@ -198,6 +200,16 @@ public class EmployeePayrollServiceTest
 		return arrayOfEmps;
 	}
 	
+	private Response addEmployeeToJsonServer(EmployeePayrollData employeePayrollData) 
+	{
+		String empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type", "application/json");
+		requestSpecification.body(empJson);
+		return requestSpecification.post("/employee_payroll");
+	}
+	
+	//uc1
 	@Test
 	public void givenEmployeeDataInJSONServer_WhenRetrieved_ShouldMatchTheCount()
 	{
@@ -205,6 +217,26 @@ public class EmployeePayrollServiceTest
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
 		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
-		assertEquals(2, entries);
+		assertEquals(3, entries);
+	}
+	
+	//uc2
+	@Test
+	public void givenNewEmployee_WhenAdded_ShouldMatch201ResponseAndCount()
+	{
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData arrayOfEmps[] = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		
+		EmployeePayrollData employeePayrollData = new EmployeePayrollData(0, "Mark Zuckerberg", 300000.0, LocalDate.now());
+		
+		Response response = addEmployeeToJsonServer(employeePayrollData);
+		int statusCode = response.getStatusCode();
+		assertEquals(201, statusCode);
+		
+		employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+		employeePayrollService.addEmployeeToPayroll(employeePayrollData, IOService.Rest_IO);
+		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
+		assertEquals(3, entries);
 	}
 } 

@@ -137,6 +137,19 @@ public class EmployeePayrollService
 		employeePayrollList.add(employeePayrollDBService.addEmployeeToPayroll(name, gender, salary, start, department));
 	}
 
+	//ucjson2
+	public void addEmployeeToPayroll(EmployeePayrollData employeePayrollData, IOService ioService) 
+	{
+		if(ioService.equals(ioService.DB_IO))
+		{
+			this.addEmployeeToPayroll(employeePayrollData.name, employeePayrollData.gender, employeePayrollData.salary, employeePayrollData.startDate, employeePayrollData.department);
+		}
+		else
+		{
+			employeePayrollList.add(employeePayrollData);
+		}
+	}
+	
 	//uc8
 	public List<EmployeePayrollData> deleteEmployee(String name) throws SQLException 
 	{
