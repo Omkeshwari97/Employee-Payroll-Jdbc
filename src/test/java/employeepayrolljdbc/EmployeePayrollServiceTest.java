@@ -217,7 +217,7 @@ public class EmployeePayrollServiceTest
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
 		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
-		assertEquals(3, entries);
+		assertEquals(6, entries);
 	}
 	
 	//uc2
@@ -228,7 +228,7 @@ public class EmployeePayrollServiceTest
 		EmployeePayrollData arrayOfEmps[] = getEmployeeList();
 		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
 		
-		EmployeePayrollData employeePayrollData = new EmployeePayrollData(0, "Mark Zuckerberg", 300000.0, LocalDate.now());
+		EmployeePayrollData employeePayrollData = new EmployeePayrollData(0, "Mark Zuckerberg", "M",300000.0, LocalDate.now());
 		
 		Response response = addEmployeeToJsonServer(employeePayrollData);
 		int statusCode = response.getStatusCode();
@@ -238,5 +238,34 @@ public class EmployeePayrollServiceTest
 		employeePayrollService.addEmployeeToPayroll(employeePayrollData, IOService.Rest_IO);
 		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
 		assertEquals(3, entries);
+	}
+	
+	//uc3
+	@Test
+	public void givenListOfNewEmployees_WhenAdded_Shouldmatch201ResponseAndCount()
+	{
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData arrayOfEmps[] = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		
+		EmployeePayrollData arrayOfNewEmps[] = {
+				new EmployeePayrollData(0, "Sunder", "M", 600000.0, LocalDate.now()), 
+				new EmployeePayrollData(0, "Mukesh", "M", 100000.0, LocalDate.now()), 
+				new EmployeePayrollData(0, "Anil", "M", 200000.0, LocalDate.now()) 
+
+		};
+		
+		for(EmployeePayrollData employeePayrollData : arrayOfNewEmps)
+		{
+			Response response = addEmployeeToJsonServer(employeePayrollData);
+			int statusCode = response.getStatusCode();
+			assertEquals(201, statusCode);
+			
+			employeePayrollData = new Gson().fromJson(response.asString(), EmployeePayrollData.class);
+			employeePayrollService.addEmployeeToPayroll(employeePayrollData, IOService.Rest_IO);
+		}
+		
+		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
+		assertEquals(6, entries);
 	}
 } 
