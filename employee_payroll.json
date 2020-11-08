@@ -54,17 +54,6 @@
         "day": 9
       },
       "gender": "M"
-    },
-    {
-      "id": 6,
-      "name": "Anil",
-      "salary": 30000000,
-      "startDate": {
-        "year": 2020,
-        "month": 11,
-        "day": 9
-      },
-      "gender": "M"
     }
   ]
 }

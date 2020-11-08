@@ -154,10 +154,17 @@ public class EmployeePayrollService
 	}
 	
 	//uc8
-	public List<EmployeePayrollData> deleteEmployee(String name) throws SQLException 
+	public List<EmployeePayrollData> deleteEmployee(String name, IOService ioService) throws SQLException 
 	{
-		employeePayrollDBService.deleteEmployee(name);
-		return readEmployeePayrollData(IOService.DB_IO);
+		if(ioService.equals(ioService.DB_IO))
+		{
+			employeePayrollDBService.deleteEmployee(name);
+			return readEmployeePayrollData(IOService.DB_IO);
+		}
+		
+		EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
+		employeePayrollList.remove(employeePayrollData);
+		return employeePayrollList;
 	}
 
 	//Thread

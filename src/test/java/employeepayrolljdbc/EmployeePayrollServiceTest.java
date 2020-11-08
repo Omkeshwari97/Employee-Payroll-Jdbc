@@ -217,7 +217,7 @@ public class EmployeePayrollServiceTest
 		EmployeePayrollService employeePayrollService;
 		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
 		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
-		assertEquals(6, entries);
+		assertEquals(5, entries);
 	}
 	
 	/*
@@ -240,6 +240,7 @@ public class EmployeePayrollServiceTest
 		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
 		assertEquals(3, entries);
 	}
+	
 	
 	//uc3
 	@Test
@@ -270,6 +271,8 @@ public class EmployeePayrollServiceTest
 		assertEquals(6, entries);
 	}
 	*/
+
+	/*
 	//uc4
 	@Test
 	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200Response()
@@ -289,5 +292,27 @@ public class EmployeePayrollServiceTest
 		Response response = requestSpecification.put("/employee_payroll/" + employeePayrollData.id);
 		int statusCode = response.getStatusCode();
 		assertEquals(200, statusCode);
+	}
+	*/
+	
+	//uc5
+	@Test
+	public void givenEmployeeToDelete_WhenDeleted_ShouldMatch200ResponseCode() throws SQLException
+	{
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData arrayOfEmps[] = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Anil");
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type", "application/json");
+		
+		Response response = requestSpecification.delete("/employee_payroll/" + employeePayrollData.id);
+		int statusCode = response.getStatusCode();
+		assertEquals(200, statusCode);
+		
+		employeePayrollService.deleteEmployee("Anil", IOService.Rest_IO);
+		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
+		assertEquals(5, entries);
 	}
 } 
