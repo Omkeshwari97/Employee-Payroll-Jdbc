@@ -42,13 +42,16 @@ public class EmployeePayrollService
 	}
 
 	//uc3 uc4
-	public void updateEmployeePayrollSalary(String name, double salary) 
+	public void updateEmployeePayrollSalary(String name, double salary, IOService ioService) 
 	{
-		int result = employeePayrollDBService.updateEmployeeData(name, salary);
-		
-		if(result == 0)
+		if(ioService.equals(IOService.DB_IO))
 		{
-			return;
+			int result = employeePayrollDBService.updateEmployeeData(name, salary);
+			
+			if(result == 0)
+			{
+				return;
+			}
 		}
 		
 		EmployeePayrollData employeePayrollData = this.getEmployeePayrollData(name);
@@ -66,7 +69,7 @@ public class EmployeePayrollService
 		return employeePayrollDataList.get(0).equals(getEmployeePayrollData(name));
 	}
 
-	private EmployeePayrollData getEmployeePayrollData(String name) 
+	EmployeePayrollData getEmployeePayrollData(String name) 
 	{
 		EmployeePayrollData employeePayrollData = this.employeePayrollList.stream()
 								.filter(employeePayrollDataItem -> employeePayrollDataItem.name.equals(name))
@@ -222,7 +225,7 @@ public class EmployeePayrollService
 		Runnable task = () -> {
 			log.info("Employee Being Updated: " + Thread.currentThread().getName());
 			employeeUpdationStatus.put(name.hashCode(), false);
-			this.updateEmployeePayrollSalary(name, salary);;
+			this.updateEmployeePayrollSalary(name, salary, IOService.DB_IO);;
 			employeeUpdationStatus.put(name.hashCode(), true);
 			log.info("Employee Updated: " + Thread.currentThread().getName());
 		};

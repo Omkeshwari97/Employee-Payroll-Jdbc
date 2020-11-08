@@ -220,6 +220,7 @@ public class EmployeePayrollServiceTest
 		assertEquals(6, entries);
 	}
 	
+	/*
 	//uc2
 	@Test
 	public void givenNewEmployee_WhenAdded_ShouldMatch201ResponseAndCount()
@@ -267,5 +268,26 @@ public class EmployeePayrollServiceTest
 		
 		long entries = employeePayrollService.countEntries(IOService.Rest_IO);
 		assertEquals(6, entries);
+	}
+	*/
+	//uc4
+	@Test
+	public void givenNewSalaryForEmployee_WhenUpdated_ShouldMatch200Response()
+	{
+		EmployeePayrollService employeePayrollService;
+		EmployeePayrollData arrayOfEmps[] = getEmployeeList();
+		employeePayrollService = new EmployeePayrollService(Arrays.asList(arrayOfEmps));
+		
+		employeePayrollService.updateEmployeePayrollSalary("Anil", 30000000.0, IOService.Rest_IO);
+		EmployeePayrollData employeePayrollData = employeePayrollService.getEmployeePayrollData("Anil");
+		
+		String empJson = new Gson().toJson(employeePayrollData);
+		RequestSpecification requestSpecification = RestAssured.given();
+		requestSpecification.header("Content-Type", "application/json");
+		requestSpecification.body(empJson);
+		
+		Response response = requestSpecification.put("/employee_payroll/" + employeePayrollData.id);
+		int statusCode = response.getStatusCode();
+		assertEquals(200, statusCode);
 	}
 } 
